@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it as below."
+authors:
+  - family-names: "Costa"
+    given-names: "Welisson G.N."
+    orcid: ""
+    affiliation: "Universidade Federal da Integração Latino-Americana (UNILA)"
+  - family-names: "Nogueira"
+    given-names: "Eliane Lopes"
+    affiliation: "SAMU 192, Foz do Iguaçu"
+  - family-names: "Costa"
+    given-names: "José L.N."
+    affiliation: "Hospital Itamed, Foz do Iguaçu"
+title: "Chikungunya Surveillance Data - Foz do Iguaçu 2023"
+version: 1.0.0
+date-released: 2025-01-27
+url: "https://github.com/WelCode99/ArbovirosesDATA"
+repository-code: "https://github.com/WelCode99/ArbovirosesDATA"
+license: CC-BY-4.0
+type: dataset
+keywords:
+  - chikungunya
+  - arboviruses
+  - epidemiology
+  - surveillance
+  - Brazil
+  - diagnostic accuracy
+abstract: >-
+  Dataset and analytical code for the study on initial clinical 
+  diagnostic accuracy and comparison with surveillance data during 
+  the 2023 Chikungunya epidemic in Foz do Iguaçu, Brazil. Includes 
+  201 RT-PCR confirmed cases and 1,965 SINAN notification records.
