@@ -38,8 +38,9 @@ def load_rtpcr_data():
     
     df = pd.read_csv(f'{DATA_RAW}RTPCR_chikungunya_anonymized.csv', sep=';')
     
-    # Create unique ID
-    df['id'] = range(1, len(df) + 1)
+    # Create unique ID only if not present
+    if 'id' not in df.columns:
+        df['id'] = range(1, len(df) + 1)
     
     # Standardize date format
     df['data'] = pd.to_datetime(df['data'], errors='coerce')
@@ -147,7 +148,9 @@ def create_merged_dataset(rtpcr_df, sinan_df):
     sinan_lab_std = sinan_lab[['idade', 'sexo', 'age_group', 'hospitalized',
                                'FEBRE', 'MIALGIA', 'CEFALEIA', 'ARTRALGIA',
                                'EXANTEMA', 'NAUSEA', 'VOMITO']].copy()
-    sinan_lab_std['id'] = range(1000, 1000 + len(sinan_lab_std))
+    # Create ID only if not already present
+    if 'id' not in sinan_lab_std.columns:
+        sinan_lab_std['id'] = range(1000, 1000 + len(sinan_lab_std))
     sinan_lab_std['source'] = 'SINAN'
     sinan_lab_std['subgroup'] = 'SINAN Laboratory'
     
@@ -156,7 +159,9 @@ def create_merged_dataset(rtpcr_df, sinan_df):
     sinan_clin_std = sinan_clin[['idade', 'sexo', 'age_group', 'hospitalized',
                                   'FEBRE', 'MIALGIA', 'CEFALEIA', 'ARTRALGIA',
                                   'EXANTEMA', 'NAUSEA', 'VOMITO']].copy()
-    sinan_clin_std['id'] = range(5000, 5000 + len(sinan_clin_std))
+    # Create ID only if not already present
+    if 'id' not in sinan_clin_std.columns:
+        sinan_clin_std['id'] = range(5000, 5000 + len(sinan_clin_std))
     sinan_clin_std['source'] = 'SINAN'
     sinan_clin_std['subgroup'] = 'SINAN Clinical-Epidemiological'
     
