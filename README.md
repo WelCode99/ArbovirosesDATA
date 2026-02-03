@@ -11,7 +11,7 @@
 This repository contains the dataset and analytical code supporting the research article:
 
 > **"Acurácia do diagnóstico clínico inicial e comparação com dados de vigilância em surto de Chikungunya: estudo de coorte retrospectivo"**  
-> Welisson G.N. Costa¹, Maria Leandra Terencio
+> Welisson B. Costa¹, Maria Leandra Terencio
 >
 > ¹ Faculdade de Medicina, Universidade Federal da Integração Latino-Americana (UNILA), Foz do Iguaçu, PR, Brasil  
 
