@@ -11,11 +11,9 @@
 This repository contains the dataset and analytical code supporting the research article:
 
 > **"Acurácia do diagnóstico clínico inicial e comparação com dados de vigilância em surto de Chikungunya: estudo de coorte retrospectivo"**  
-> Welisson G.N. Costa¹, Eliane Lopes Nogueira², José L.N. Costa³
+> Welisson G.N. Costa¹, Maria Leandra Terencio
 >
 > ¹ Faculdade de Medicina, Universidade Federal da Integração Latino-Americana (UNILA), Foz do Iguaçu, PR, Brasil  
-> ² Serviço de Atendimento Móvel de Urgência (SAMU 192), Foz do Iguaçu, PR, Brasil  
-> ³ Hospital Itamed, Foz do Iguaçu, PR, Brasil
 
 ### 🎯 Study Overview
 
@@ -25,7 +23,7 @@ This repository contains the dataset and analytical code supporting the research
 
 **Period**: January - December 2023
 
-**Setting**: Emergency Department of Municipal Emergency Care Unit (UPA) and SINAN/DATASUS surveillance database
+**Setting**: Emergency Department of Municipal Emergency Care Unit (HMPGL) and SINAN/DATASUS surveillance database
 
 ### 📊 Data Description
 
@@ -163,8 +161,7 @@ ORCID: [ORCID ID]
 ### 🏛️ Institutional Support
 
 - Universidade Federal da Integração Latino-Americana (UNILA)
-- Serviço de Atendimento Móvel de Urgência (SAMU 192) - Foz do Iguaçu
-- Secretaria Municipal de Saúde de Foz do Iguaçu
+- Hospital Municipal Padre Germano Lauck
 
 ---
 
