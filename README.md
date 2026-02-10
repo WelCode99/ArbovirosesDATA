@@ -47,6 +47,7 @@ ArbovirosesDATA/
 │   └── processed/
 │       └── merged_analysis_dataset.csv          # Processed dataset for analysis
 ├── scripts/
+│   ├── 00_anonymize_data.py            # Data anonymization (k-anonymity k≥3)
 │   ├── 01_data_preprocessing.py        # Data cleaning and preparation
 │   ├── 02_descriptive_analysis.py      # Descriptive statistics
 │   ├── 03_diagnostic_accuracy.py       # Diagnostic accuracy analysis
@@ -59,6 +60,7 @@ ArbovirosesDATA/
 │   └── [Generated publication figures]
 └── docs/
     ├── CODEBOOK.md                     # Variable dictionary
+    ├── DATA_ANONYMIZATION.md           # Anonymization documentation
     └── STATISTICAL_ANALYSIS_PLAN.md    # Pre-registered analysis plan
 ```
 
@@ -112,9 +114,16 @@ python scripts/08_generate_figures.py
 ### 🔐 Data Privacy & Ethics
 
 - **Ethical Approval**: This study was approved by the Research Ethics Committee (CEP) - Protocol CAAE: [pending]
-- **Data Anonymization**: All personally identifiable information (addresses, names, ID numbers) has been removed
-- **Geolocation**: Only neighborhood-level geographic data is included (bairro)
-- **LGPD Compliance**: Data handling follows Brazilian General Data Protection Law (Lei nº 13.709/2018)
+- **Data Anonymization**: Comprehensive anonymization measures applied:
+  - All personally identifiable information removed (names, addresses, ID numbers)
+  - Exact dates generalized to month/semester level
+  - Geographic coordinates removed (only state-level location retained)
+  - Health facility identifiers removed
+  - Birth year and exact age removed
+  - K-anonymity (k≥3) validated for all records
+  - See [DATA_ANONYMIZATION.md](docs/DATA_ANONYMIZATION.md) for complete details
+- **LGPD Compliance**: Full compliance with Brazilian General Data Protection Law (Lei nº 13.709/2018)
+- **Privacy Standard**: Meets international standards for health data anonymization
 
 ### 📄 License
 

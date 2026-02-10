@@ -16,16 +16,19 @@ n = 201 RT-PCR confirmed Chikungunya cases
 
 | Variable | Type | Description | Values/Range |
 |----------|------|-------------|--------------|
-| `id` | Integer | Unique case identifier | 1-201 |
+| `id` | Integer | Unique case identifier (randomized) | 1-201 |
 | `detectado` | String | Arbovirus detected | "CHIK" |
-| `data` | Date | Date of presentation | YYYY-MM-DD |
+| `year_month` | String | Presentation year-month (anonymized) | YYYY-MM |
 | `idade` | Numeric | Age in years | 0-99 |
+| `age_bin` | Categorical | Age group (anonymized) | "0-17", "18-39", "40-59", "60+", "0-39", "40+" |
 | `sexo` | Categorical | Biological sex | "M" = Male, "F" = Female |
-| `bairro` | String | Neighborhood (anonymized) | Text |
+| `bairro` | String | Neighborhood (anonymized) | Text or "OTHER" for rare neighborhoods |
 | `desfecho` | Categorical | Clinical outcome | See below |
 | `sequelas` | String | Reported sequelae | Text or "NONE" |
 | `HIPOTESE_DIAGNOSTICA` | Categorical | Initial clinical hypothesis | See below |
 | `PROVA_LACO` | Categorical | Tourniquet test result | See below |
+
+**Note:** Original `data` field removed for anonymization. Original `sintomas` (free-text symptom descriptions) removed to prevent re-identification.
 
 #### Symptom Variables (Binary: 0 = Absent, 1 = Present)
 
@@ -80,7 +83,23 @@ n = 201 RT-PCR confirmed Chikungunya cases
 SINAN/DATASUS - Brazilian Notifiable Diseases Information System
 
 ### Sample
-n = 1,965 Chikungunya notifications from Foz do Iguaçu, 2023
+n = 1,964 Chikungunya notifications from Foz do Iguaçu, 2023 (1 record suppressed for k-anonymity)
+
+### Anonymization Changes
+
+**Removed Fields (for privacy protection):**
+- All exact dates replaced with `_month` suffix fields (YYYY-MM or semester format)
+- `ANO_NASC` (birth year)
+- `NU_IDADE_N` (exact age code) - replaced with `age_group`
+- `munResLat`, `munResLon`, `munResAlt`, `munResArea` (geographic coordinates)
+- `ID_UNIDADE`, `ID_REGIONA` (health facility identifiers)
+- `ID_MUNICIP`, `ID_MN_RESI`, `ID_RG_RESI` (municipality identifiers)
+- `munResNome`, `munResTipo`, `munResStatus` (municipality details)
+- `ID_OCUPA_N` (occupation code)
+- `NU_LOTE_I`, `NDUPLIC_N`, `MIGRADO_W` (system identifiers)
+- `COMUNINF` (infection municipality code)
+
+**See [DATA_ANONYMIZATION.md](DATA_ANONYMIZATION.md) for complete details.**
 
 ### Key Variables
 
@@ -88,10 +107,10 @@ n = 1,965 Chikungunya notifications from Foz do Iguaçu, 2023
 |----------|------|-------------|--------|
 | `TP_NOT` | String | Notification type | "Individual" |
 | `ID_AGRAVO` | String | Disease code (ICD-10) | "A92.0" = Chikungunya |
-| `DT_NOTIFIC` | Date | Notification date | YYYY-MM-DD |
-| `DT_SIN_PRI` | Date | Symptom onset date | YYYY-MM-DD |
-| `NU_IDADE_N` | Integer | Age (coded) | 4XXX = years |
-| `CS_SEXO` | Categorical | Sex | "Masculino", "Feminino" |
+| `DT_NOTIFIC_month` | String | Notification month (anonymized) | YYYY-MM or YYYY-HX |
+| `DT_SIN_PRI_month` | String | Symptom onset month (anonymized) | YYYY-MM or YYYY-HX |
+| `age_group` | Categorical | Age group (anonymized) | "0-17", "18-39", "40-59", "60+", "0-39", "40+", "ALL_AGES" |
+| `CS_SEXO` | Categorical | Sex | "Masculino", "Feminino", "Ignorado" |
 | `CS_RACA` | Categorical | Race/ethnicity | Text |
 | `CS_ESCOL_N` | Categorical | Education level | Text |
 | `CLASSI_FIN` | Categorical | Final classification | See below |
