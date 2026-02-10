@@ -28,6 +28,19 @@ warnings.filterwarnings('ignore')
 DATA_RAW = '../data/raw/'
 DATA_PROCESSED = '../data/processed/'
 
+# Age group midpoint mappings for anonymized data
+# These represent approximate midpoints or reasonable defaults for age groups
+# used when exact ages have been anonymized to broader categories
+AGE_GROUP_MIDPOINTS = {
+    '0-17': 8.5,      # Midpoint of pediatric range
+    '18-39': 28.5,    # Midpoint of young adult range
+    '40-59': 49.5,    # Midpoint of middle-aged range
+    '60+': 70,        # Representative value for elderly (not a true midpoint)
+    '0-39': 20,       # Broad young range approximation
+    '40+': 60,        # Broad older range approximation
+    'ALL_AGES': 40    # Population-wide approximation (study mean ~41 years)
+}
+
 # =============================================================================
 # LOAD DATA
 # =============================================================================
@@ -42,8 +55,13 @@ def load_rtpcr_data():
     if 'id' not in df.columns:
         df['id'] = range(1, len(df) + 1)
     
-    # Standardize date format
-    df['data'] = pd.to_datetime(df['data'], errors='coerce')
+    # Handle anonymized date field (year_month instead of exact date)
+    if 'year_month' in df.columns:
+        # Convert year-month to datetime (first day of month for consistency)
+        df['data'] = pd.to_datetime(df['year_month'] + '-01', errors='coerce')
+    elif 'data' in df.columns:
+        # Fallback if exact dates still present
+        df['data'] = pd.to_datetime(df['data'], errors='coerce')
     
     # Clean age
     df['idade'] = pd.to_numeric(df['idade'], errors='coerce')
@@ -69,11 +87,16 @@ def load_rtpcr_data():
     df['diagnostic_correct'] = df['HIPOTESE_DIAGNOSTICA'].str.contains(
         'CHIK', case=False, na=False).astype(int)
     
-    # Age groups
-    df['age_group'] = pd.cut(df['idade'], 
-                             bins=[0, 18, 40, 60, 100],
-                             labels=['<18', '18-39', '40-59', '≥60'],
-                             right=False)
+    # Age groups - use existing age_bin if available, otherwise create
+    if 'age_bin' not in df.columns:
+        df['age_group'] = pd.cut(df['idade'], 
+                                 bins=[0, 18, 40, 60, 100],
+                                 labels=['<18', '18-39', '40-59', '≥60'],
+                                 right=False)
+    else:
+        # Map anonymized age_bin to standard age_group labels
+        # Handle various anonymized age bins
+        df['age_group'] = df['age_bin']
     
     # Symptom count
     df['symptom_count'] = df[symptom_cols].sum(axis=1)
@@ -86,7 +109,7 @@ def load_sinan_data():
     """Load and preprocess SINAN surveillance data."""
     print("Loading SINAN data...")
     
-    df = pd.read_csv(f'{DATA_RAW}SINAN_chikungunya_2023.csv', sep=';')
+    df = pd.read_csv(f'{DATA_RAW}SINAN_chikungunya_2023.csv', sep=';', low_memory=False)
     
     # Filter confirmed Chikungunya cases
     df = df[df['CLASSI_FIN'] == 'Chikungunya'].copy()
@@ -98,13 +121,30 @@ def load_sinan_data():
         'Clinical-epidemiological'
     )
     
-    # Standardize age (SINAN uses 4XXX format for years)
-    df['idade'] = df['NU_IDADE_N'].apply(
-        lambda x: x - 4000 if pd.notna(x) and x >= 4000 else x
-    )
+    # Handle anonymized age field
+    if 'age_group' in df.columns:
+        # Age already anonymized - extract numeric age from age_group for analysis
+        # Use predefined midpoints for compatibility with analyses requiring numeric age
+        df['idade'] = df['age_group'].map(AGE_GROUP_MIDPOINTS)
+        # Keep original age_group from anonymization
+    elif 'NU_IDADE_N' in df.columns:
+        # Fallback if exact age still present (legacy compatibility)
+        df['idade'] = df['NU_IDADE_N'].apply(
+            lambda x: x - 4000 if pd.notna(x) and x >= 4000 else x
+        )
+        # Create age groups
+        df['age_group'] = pd.cut(df['idade'], 
+                                 bins=[0, 18, 40, 60, 100],
+                                 labels=['<18', '18-39', '40-59', '≥60'],
+                                 right=False)
+    else:
+        print("  WARNING: No age information found")
+        df['idade'] = np.nan
+        df['age_group'] = 'Unknown'
     
     # Standardize sex
-    df['sexo'] = df['CS_SEXO'].map({'Masculino': 'M', 'Feminino': 'F'})
+    if 'CS_SEXO' in df.columns:
+        df['sexo'] = df['CS_SEXO'].map({'Masculino': 'M', 'Feminino': 'F'})
     
     # Standardize symptoms (Sim/Não to 1/0)
     symptom_mapping = {'Sim': 1, 'Não': 0}
@@ -117,13 +157,8 @@ def load_sinan_data():
             df[col] = df[col].map(symptom_mapping).fillna(0).astype(int)
     
     # Hospitalization
-    df['hospitalized'] = (df['HOSPITALIZ'] == 'Sim').astype(int)
-    
-    # Age groups
-    df['age_group'] = pd.cut(df['idade'], 
-                             bins=[0, 18, 40, 60, 100],
-                             labels=['<18', '18-39', '40-59', '≥60'],
-                             right=False)
+    if 'HOSPITALIZ' in df.columns:
+        df['hospitalized'] = (df['HOSPITALIZ'] == 'Sim').astype(int)
     
     print(f"  Loaded {len(df)} SINAN confirmed cases")
     print(f"    - Laboratory confirmed: {(df['sinan_group'] == 'Laboratory').sum()}")

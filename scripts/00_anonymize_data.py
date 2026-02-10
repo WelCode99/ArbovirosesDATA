@@ -31,6 +31,11 @@ warnings.filterwarnings('ignore')
 # =============================================================================
 
 DATA_RAW = '../data/raw/'
+
+# NOTE: This script processes files that may already have basic anonymization.
+# It applies comprehensive k-anonymity (k≥3) and additional privacy measures.
+# The script modifies files in place, so ensure you have backups.
+
 K_ANONYMITY_THRESHOLD = 3  # Minimum group size for k-anonymity
 
 # =============================================================================
