@@ -50,6 +50,7 @@ Thumbs.db
 data/raw/*.xlsx
 data/raw/*ORIGINAL*
 data/raw/*backup*
+data/raw/backups/
 
 # Temporary files
 *.tmp
